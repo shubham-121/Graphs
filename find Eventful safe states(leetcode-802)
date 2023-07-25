@@ -1,0 +1,44 @@
+class Solution {
+public:
+    vector<int> eventualSafeNodes(vector<vector<int>>& adj) {
+         int V=adj.size();
+         vector<int>indg(V,0);
+        vector<int>ans;
+        queue<int>q;
+        
+        vector<int>revAdj[V];
+         
+         //reverse all the edges of the graph,
+         //  and then perform simple Kahn's algo until queue is not empty
+        for(int i=0;i<V;i++){       
+            for(auto it:adj[i]){
+                revAdj[it].push_back(i);
+                indg[i]++;
+            }
+        }
+        
+        for(int i=0;i<V;i++)
+        {
+            if(indg[i]==0)
+            q.push(i);
+        }
+        
+        while(!q.empty())
+        {
+            int node=q.front();
+            q.pop();
+            
+            ans.push_back(node);
+            
+            for(auto it:revAdj[node])
+            {
+                indg[it]--;
+                if(indg[it]==0)
+                q.push(it);
+            }
+        }
+        
+        sort(ans.begin(), ans.end());
+        return ans;
+    }
+};
